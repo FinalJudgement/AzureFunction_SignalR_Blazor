@@ -1,0 +1,38 @@
+﻿@page "/"
+@inject HubConnection HubConnection
+@inject HttpClient HttpClient
+@inject MessageService MessageService
+
+
+<h3>Messages</h3>
+<ul>
+    @foreach (var message in MessageService.Messages)
+    {
+        <li>@message</li>
+    }
+</ul>
+
+<button @onclick="SendMessage">Send Test Message</button>
+
+@code {
+   
+
+    private async Task SendMessage()
+    {
+
+        var message = new { Text = "Hello from Blazor" };
+
+        Console.WriteLine("click");
+        var response = await HttpClient.PostAsJsonAsync("http://localhost:7104/api/SendMessage", message);
+
+        if (response.IsSuccessStatusCode)
+        {
+            Console.WriteLine("Message sent successfully.");
+        }
+        else
+        {
+            Console.WriteLine("Failed to send message.");
+        }
+    }
+
+}
